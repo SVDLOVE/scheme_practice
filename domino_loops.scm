@@ -19,6 +19,71 @@
 ;    )
 ;)
 
+(define dominoes 
+    (lambda (n)
+        (let (
+                (ll (build-my-same-list 0 n))
+                (lr (build-my-inc-list  0 n))
+            )
+            (map cons ll lr)
+        )
+    )
+)
+
+(define (permutations ls)
+    (if (null? ls)
+        '(())
+        (apply append
+             (map 
+                (lambda (l) 
+                    (insert-perm (car ls) l)
+                )
+                (permutations (cdr ls))
+            )
+        )
+    )
+)
+
+(define loop? 
+    (lambda (L)
+        (find_loop 
+            (let (
+                    (flist (car L))
+                    (clist (car L))
+                    (llist (cdr L))
+                )
+                (if(null? llist) llist
+                    (cons () ())
+                )
+            )
+        )
+    )
+)
+
+
+
+
+
+
+
+
+
+
+
+(define (insert-perm x ls)
+    (if (null? ls)
+        (list (list x))
+        (cons (cons x ls)
+            (map 
+                (lambda (l) 
+                    (cons (car ls) l)
+                )
+                (insert-perm x (cdr ls))
+            )
+        )
+    )
+)
+
 (define build-same-list 
     (lambda (n1 n2)
         (if(<=  n2 0) '()
@@ -50,41 +115,3 @@
         )
     )
 )
-
-(define dominoes 
-    (lambda (n)
-        (let (
-                (ll (build-my-same-list 0 n))
-                (lr (build-my-inc-list  0 n))
-            )
-            (map cons ll lr)
-        )
-    )
-)
-
-;(define dominoes 
-;    (lambda (n)
-;        (let (
-;                (ll '(0 1 2 3 4 5))
-;                (lr (build-my-inc-list  0 n))
-;            )
-;            (map cons ll lr)
-;        )
-;    )
-;)
-
-
-
-;(define (permut ls)
-;  (if (null? ls)
-;      '(())
-;      (apply append
-;             (map (lambda (l) (insert-perm (car ls) l))
-;                  (permut (cdr ls))))))
-;
-;(define (insert-perm x ls)
-;  (if (null? ls)
-;      (list (list x))
-;      (cons (cons x ls)
-;            (map (lambda (l) (cons (car ls) l))
-;                 (insert-perm x (cdr ls))))))
