@@ -1,23 +1,23 @@
-;(define domino-loops
-;    (lambda (n)
-;        (filter loop? (permutations (dominoes n)))
-;    )
-;)
-;
-;(define filter
-;    (lambda (f L)
-;    ; return list of those elements in L which pass through filter f
-;        (if (null? L)
-;            L
-;            (let ((N (f (car L))))
-;                (if (null? N)
-;                    (filter f (cdr L))
-;                    (cons N (filter f (cdr L)))
-;                )
-;            )
-;        )
-;    )
-;)
+(define domino-loops
+    (lambda (n)
+        (filter loop? (permutations (dominoes n)))
+    )
+)
+
+(define filter
+    (lambda (f L)
+    ; return list of those elements in L which pass through filter f
+        (if (null? L)
+            L
+            (let ((N (f (car L))))
+                (if (null? N)
+                    (filter f (cdr L))
+                    (cons N (filter f (cdr L)))
+                )
+            )
+        )
+    )
+)
 
 (define dominoes 
     (lambda (n)
@@ -46,15 +46,19 @@
 
 (define loop? 
     (lambda (L)
-        (find_loop 
-            (let (
-                    (flist (car L))
-                    (clist (car L))
-                    (llist (cdr L))
+        (let*
+            (
+                (fl (cond 
+                        ((= (cdar L) (caadr L) ) (car L))
+                        ((= (caar L) (caadr L) ) (cons (cdar L) (caar L)))
+                        ((= (caar L) (cdadr L) ) (cons (cdar L) (caar L)))
+                        (else (car L))
+                    )
                 )
-                (if(null? llist) llist
-                    (cons () ())
-                )
+                (ll (compare_list_is_loop fl fl (cdr L)) )
+            )
+            (if(< (length ll) (length L)) '()
+                ll
             )
         )
     )
@@ -62,13 +66,32 @@
 
 
 
-
-
-
-
-
-
-
+(define (compare_list_is_loop fl cl lsl)
+    (cond 
+        ((null? lsl) 
+            (if(equal? (car fl)  (cdr cl)) (list fl)
+                '()
+            )
+        )
+        (else
+            (cond
+                ((equal? (cdr cl) (caar lsl))  
+                    (cons 
+                        (car lsl) 
+                        (compare_list_is_loop fl (car lsl) (cdr lsl)) 
+                    ) 
+                )
+                ((equal?  (cdr cl) (cdar lsl))  
+                    (cons 
+                        (cons (cdar lsl) (caar lsl)) 
+                        (compare_list_is_loop fl (cons (cdar lsl) (caar lsl)) (cdr lsl))  
+                    ) 
+                )
+                (else '())
+            )
+        )
+    )
+)
 
 (define (insert-perm x ls)
     (if (null? ls)
