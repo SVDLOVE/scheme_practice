@@ -22,8 +22,8 @@
 (define dominoes 
     (lambda (n)
         (let (
-                (ll (build-my-same-list 0 n))
-                (lr (build-my-inc-list  0 n))
+                (ll (build-my-same-list n n))
+                (lr (build-my-inc-list  n))
             )
             (map cons ll lr)
         )
@@ -116,25 +116,25 @@
 )
 
 (define build-inc-list 
-    (lambda (n1 n2)
-        (if(> n1 n2 ) '()
-            (append (list n1) (build-inc-list (+ n1 1) n2))
+    (lambda (n1 )
+        (if(< n1 0 ) '()
+            (append (list n1) (build-inc-list (- n1 1)))
         )
     )
 )
 
 (define build-my-inc-list 
-    (lambda (n1 n2)
-        (if(> n1 n2 ) '()
-            (append (build-inc-list n1 n2) (build-my-inc-list (+ n1 1) n2))
+    (lambda (n1)
+        (if(< n1 0 ) '()
+            (append (build-inc-list n1) (build-my-inc-list (- n1 1)))
         )
     )
 )
 
 (define build-my-same-list 
     (lambda (n1 n2)
-        (if(> n1 n2 ) '()
-            (append (build-same-list n1 (+ (- n2 n1) 1)) (build-my-same-list (+ n1 1) n2))
+        (if(< n1 0 ) '()
+            (append (build-same-list n1 (+ n1 1)) (build-my-same-list (- n1 1) n2))
         )
     )
 )
